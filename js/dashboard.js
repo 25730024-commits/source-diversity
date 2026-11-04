@@ -23,7 +23,7 @@ function renderResult(result) {
   const hhi = result.hhi, cr3 = result.cr3, gi = result.gradeIndex, G = GRADES[gi];
   const subText = `최근 ${CONFIG.PERIOD_MONTHS}개월 · 전체 ${totalRawCount.toLocaleString()}개 중 추출 (기간 밖 ${result.outOfPeriod} · DB 밖 ${result.unmatched} · 채널 정보 없음 ${result.noChannel} 제외)`;
   // 결과 화면으로 전환 (인트로는 접힘)
-  document.body.classList.add('has-result');
+  document.body.classList.add('has-result', 'has-data');
   const root = document.documentElement;
   root.style.setProperty('--g', G.color);
   root.style.setProperty('--gsoft', G.soft);
@@ -103,6 +103,7 @@ function renderResult(result) {
 }
 
 function updateChart(channels) {
+  if (!window.Chart) return;
   const ctx = document.getElementById('channelChart').getContext('2d');
   const topChannels = channels.slice(0, 4);
   const otherShare = channels.slice(4).reduce((sum, ch) => sum + ch.share, 0);
@@ -115,6 +116,7 @@ function updateChart(channels) {
     data.push(otherShare);
   }
 
+  document.getElementById('channelChart').setAttribute('aria-label', '채널별 시청 비중 도넛 차트: ' + labels.join(', '));
   if (myChart) myChart.destroy();
 
   myChart = new Chart(ctx, {
@@ -211,3 +213,11 @@ function renderSummary(o){
     `HHI ${o.hhi.toLocaleString()}로 '${o.G.lv} ${o.G.name}' 구간에 해당합니다. (수치 기반 분석 결과이며 채널의 좋고 나쁨은 판단하지 않습니다.)`;
 }
 
+
+// CR3 평가 문구 · 분석 기준 목록
+function renderExtras(result) {
+  document.getElementById('cr3-eval').textContent = cr3Label(result.cr3);
+  const ul = document.getElementById('basis-list');
+  ul.innerHTML = '';
+  basisItems(result).forEach(t => { const li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+}

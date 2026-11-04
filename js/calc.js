@@ -1,13 +1,11 @@
 // 편중도 계산 (화면과 무관한 순수 계산) — 테스트 데이터로 단독 검증 가능
-// 입력: parser.js 기록 배열, channels.json 배열 / 출력: 결과 객체
-function analyze(records, channels) {
+// 1단계 matchRecords: 기간 필터 + 채널 DB 매칭 / 2단계 computeResult: 점유율·HHI·CR3·등급
+function matchRecords(records, channels) {
   const index = buildChannelIndex(channels);
   const cutoff = new Date();
   cutoff.setMonth(cutoff.getMonth() - CONFIG.PERIOD_MONTHS);
-
   let noChannel = 0, outOfPeriod = 0, unmatched = 0, newsCount = 0;
   const counts = new Map();
-
   records.forEach(r => {
     if (!r.channelId && !r.channelName) { noChannel++; return; }   // 채널 정보 없음(삭제·비공개·광고)
     if (r.watchedAt && r.watchedAt < cutoff) { outOfPeriod++; return; }
@@ -18,14 +16,18 @@ function analyze(records, channels) {
     e.count++;
     counts.set(ch.id, e);
   });
-
-  const base = { rawCount: records.length, noChannel, outOfPeriod, unmatched, newsCount };
-  if (newsCount < CONFIG.MIN_SAMPLE) return { ...base, status: 'insufficient' };
-
-  const channelsOut = [...counts.values()]
-    .map(c => ({ ...c, share: (c.count / newsCount) * 100 }))
-    .sort((a, b) => b.count - a.count);
-  const hhi = Math.round(channelsOut.reduce((s, c) => s + c.share * c.share, 0));
-  const cr3 = channelsOut.slice(0, 3).reduce((s, c) => s + c.share, 0);
-  return { ...base, status: 'ok', hhi, cr3, gradeIndex: gradeIndex(hhi), channels: channelsOut };
+  return { rawCount: records.length, noChannel, outOfPeriod, unmatched, newsCount, counts };
 }
+
+function computeResult(t) {
+  const { counts, ...base } = t;
+  if (base.newsCount < CONFIG.MIN_SAMPLE) return { ...base, status: 'insufficient' };
+  const channels = [...counts.values()]
+    .map(c => ({ ...c, share: (c.count / base.newsCount) * 100 }))
+    .sort((a, b) => b.count - a.count);
+  const hhi = Math.round(channels.reduce((s, c) => s + c.share * c.share, 0));
+  const cr3 = channels.slice(0, 3).reduce((s, c) => s + c.share, 0);
+  return { ...base, status: 'ok', hhi, cr3, gradeIndex: gradeIndex(hhi), channels };
+}
+
+function analyze(records, channels) { return computeResult(matchRecords(records, channels)); }

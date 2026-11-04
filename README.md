@@ -12,12 +12,15 @@ js/config.js      설정값(분석 기간, 최소 표본, 등급 구간)
 js/parser.js      Takeout HTML/JSON 파싱
 js/matcher.js     채널 ID ↔ 채널 DB 매칭
 js/calc.js        점유율·HHI·CR3·등급 계산
+js/messages.js    CR3 평가·이력 비교 문구(규칙 기반)
+js/ui.js          동의창·업로드 창·진행 표시·오류 박스
 js/dashboard.js   결과 화면 렌더링
 js/storage.js     진단 이력 저장
 js/app.js         진입점
 data/channels.json        채널 DB
 data/sample_history.json  예시 데이터(가짜 기록)
-asset/  docs/
+asset/logo.png  로고 파일을 이 이름으로 넣으면 자동 표시(없으면 기본 마크)
+docs/CHANGELOG.md  수정 내역
 ```
 
 ## 실행 방법

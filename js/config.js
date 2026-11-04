@@ -4,6 +4,7 @@ const CONFIG = {
   SAMPLE_URL: './data/sample_history.json',  // 예시 데이터(가짜 기록)
   PERIOD_MONTHS: 6,   // 분석 기간(최근 N개월). DB 엑셀 '계산 규칙' 기준
   MIN_SAMPLE: 30,     // 최소 표본. 계획서는 10건, DB 엑셀은 30건(잠정) → 팀 확정 필요
+  CONSENT_KEY: 'jbp_consent',                // 동의 기억(같은 탭에서만)
   HISTORY_KEY: 'jbp_diagnosis_history',      // LocalStorage 키
   MAX_HISTORY: 20
 };
