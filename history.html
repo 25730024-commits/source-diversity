@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>진단 이력 - 정보편식 진단기</title>
+<link rel="stylesheet" href="./css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="band">
+  <header><div class="wrap topbar">
+    <div class="logo">정보편식 진단기</div>
+    <nav class="nav">
+      <button onclick="location.href='index.html'">대시보드</button>
+      <button class="active">진단 이력</button>
+    </nav>
+  </div></header>
+</div>
+<main class="wrap hist">
+  <h2>진단 이력</h2>
+  <p class="sub">이 브라우저에 저장된 결과 요약입니다. 원본 시청기록은 저장하지 않습니다.</p>
+  <div class="panel"><h4>HHI 변화</h4><canvas id="trend" height="120"></canvas><p class="hist-empty" id="trend-note"></p></div>
+  <div class="panel">
+    <h4>저장된 진단</h4>
+    <table class="table">
+      <thead><tr><th>날짜</th><th>HHI</th><th>등급</th><th>CR3</th><th>뉴스 시청</th><th>상위 채널</th><th></th></tr></thead>
+      <tbody id="hist-body"></tbody>
+    </table>
+    <p class="hist-empty" id="hist-empty">저장된 진단 이력이 없습니다.</p>
+    <button class="chip-btn" id="clear-btn">전체 삭제</button>
+  </div>
+</main>
+<script src="./js/config.js"></script>
+<script src="./js/storage.js"></script>
+<script src="./js/history.js"></script>
+</body>
+</html>
