@@ -1,0 +1,8 @@
+watch-history*
+시청 기록*
+*.zip
+Takeout/
+.DS_Store
+Thumbs.db
+.vscode/
+node_modules/
